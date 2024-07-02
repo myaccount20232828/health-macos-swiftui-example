@@ -2,12 +2,6 @@ name: Build and Upload macOS App
 
 on:
   push:
-    branches:
-      - main  # Adjust the branch as needed
-  pull_request:
-    branches:
-      - main  # Adjust the branch as needed
-
 jobs:
   build:
     runs-on: macos-latest  # Use the latest macOS runner
