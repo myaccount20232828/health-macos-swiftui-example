@@ -12,21 +12,12 @@ jobs:
 
       - name: Build macOS App
         run: |
-          xcodebuild \
-            -project Health.xcodeproj \  # Replace with your project name if different
-            -scheme Health \             # Replace with your scheme name if different
-            -configuration Release \     # Use Release or Debug as needed
-            clean build
+          xcodebuild -project Health.xcodeproj -scheme Health -configuration Release
+          #clean build
 
       - name: Archive macOS App
         run: |
-          xcodebuild \
-            -project Health.xcodeproj \
-            -scheme Health \
-            -configuration Release \
-            -archivePath build/Health.xcarchive \
-            archive
-
+          xcodebuild -project Health.xcodeproj -scheme Health -configuration Release -archivePath build/Health.xcarchive archive
       - name: Export macOS App
         run: |
           xcodebuild \
