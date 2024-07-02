@@ -12,22 +12,13 @@ jobs:
 
       - name: Build macOS App
         run: |
-          xcodebuild -project Health.xcodeproj -scheme Health -configuration Release
-          #clean build
-
-      - name: Archive macOS App
-        run: |
-          xcodebuild -project Health.xcodeproj -scheme Health -configuration Release -archivePath build/Health.xcarchive archive
-      - name: Export macOS App
-        run: |
-          xcodebuild \
-            -exportArchive \
-            -archivePath build/Health.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath build
-
+            Scheme="Health"
+            XCProject="Health.xcodeproj"
+            xcodebuild -jobs $(sysctl -n hw.ncpu) -project "$XCProject" -scheme "$Scheme" -configuration Release -arch arm64 -sdk osx -derivedDataPath "$TMPDIR/App" CODE_SIGNING_ALLOWED=NO DSTROOT=$AppTMP/install ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES=NO
+            mv "$(echo $TMPDIR/App/Build/Products/Release-*/*.app)" ./
+            ls
       - name: Upload macOS App
         uses: actions/upload-artifact@v2
         with:
-          name: Health-macOS-app
-          path: build/Health.app
+          name: App
+          path: "*.app"
