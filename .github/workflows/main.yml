@@ -1,0 +1,48 @@
+name: Build and Upload macOS App
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch as needed
+  pull_request:
+    branches:
+      - main  # Adjust the branch as needed
+
+jobs:
+  build:
+    runs-on: macos-latest  # Use the latest macOS runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build macOS App
+        run: |
+          xcodebuild \
+            -project Health.xcodeproj \  # Replace with your project name if different
+            -scheme Health \             # Replace with your scheme name if different
+            -configuration Release \     # Use Release or Debug as needed
+            clean build
+
+      - name: Archive macOS App
+        run: |
+          xcodebuild \
+            -project Health.xcodeproj \
+            -scheme Health \
+            -configuration Release \
+            -archivePath build/Health.xcarchive \
+            archive
+
+      - name: Export macOS App
+        run: |
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/Health.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build
+
+      - name: Upload macOS App
+        uses: actions/upload-artifact@v2
+        with:
+          name: Health-macOS-app
+          path: build/Health.app
